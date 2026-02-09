@@ -1,3 +1,5 @@
+using System.Text;
+using System.Diagnostics;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
@@ -8,10 +10,14 @@ class Lexer
     private int line = 1;
     private string source = "";
     public List<Token> Tokens = [];
+
     public Lexer(string source)
     {
         this.source = source;
     }
+
+    private bool isAtEnd() => curr >= source.Length;
+
     private char Advance()
     {
         char ch = source[curr];
@@ -19,13 +25,19 @@ class Lexer
         return ch;
     }
 
-    private char Peak()
+    private char Peek()
     {
+        if (isAtEnd())
+            return '\0';
         return source[curr];
     }
 
     private char Lookahead()
     {
+        if (isAtEnd())
+        {
+            return '\0';
+        }
         return source[curr + 1];
     }
 
@@ -77,7 +89,7 @@ class Lexer
                 case ',': AddToken(TokenType.TOK_COMMA, ",");     break;
                 case '#':
                     {
-                        while(Peak() != '\n')
+                        while(Peek() != '\n')
                         {
                             Advance();
                         }
@@ -91,7 +103,26 @@ class Lexer
                     {
                         if (Match('='))
                         {
-                            AddToken(OperatorTables.Ops[$"{ch}="], $"{ch}=");
+                            AddToken(OperatorsTable.Ops[$"{ch}="], $"{ch}=");
+                        }
+                        break;
+                    }
+                case char c when char.IsDigit(c):
+                    {
+                        var sb = new StringBuilder();
+                        sb.Append(c);
+                        while (char.IsDigit(Peek()))
+                            sb.Append(Advance());
+                        if (Peek() == '.' && char.IsDigit(Lookahead()))
+                        {
+                            sb.Append(Advance());
+                            while (char.IsDigit(Peek()))
+                                sb.Append(Advance());
+                            AddToken(TokenType.TOK_FLOAT, sb.ToString());
+                        }
+                        else
+                        {
+                            AddToken(TokenType.TOK_INTEGER, sb.ToString());
                         }
                         break;
                     }

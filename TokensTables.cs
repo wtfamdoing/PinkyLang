@@ -55,7 +55,7 @@ public enum TokenType
         TOK_FLOAT
     }
 
-public static class OperatorTables
+public static class OperatorsTable
 {
     public static readonly IReadOnlyDictionary<string, TokenType> Ops = new Dictionary<string, TokenType>
     {
