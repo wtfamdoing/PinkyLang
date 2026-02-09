@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PinkyLang")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77cce1ae6272ff9d0495ca25d4fa9e4b88dcdaa2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f00a71f21b357e50666ff94449bcb6b8351b7355")]
 [assembly: System.Reflection.AssemblyProductAttribute("PinkyLang")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PinkyLang")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
