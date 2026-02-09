@@ -1,2 +1,2 @@
 run:
-	dotnet run pinkyScripts/firstScript.pinky
+	dotnet run PinkyScripts/file.pinky

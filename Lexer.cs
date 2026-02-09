@@ -59,12 +59,6 @@ class Lexer
                 case ' ':
                 case '\t':
                 case '\r':                                        break;
-                case '#': 
-                    while(Peak() != '\n')
-                    {
-                        Advance();
-                    }
-                    break;
                 case '+': AddToken(TokenType.TOK_PLUS, "+");      break;
                 case '-': AddToken(TokenType.TOK_MINUS, "-");     break;
                 case '*': AddToken(TokenType.TOK_STAR, "*");      break;
@@ -81,6 +75,26 @@ class Lexer
                 case '}': AddToken(TokenType.TOK_RCURLY, "}");    break;
                 case '.': AddToken(TokenType.TOK_DOT, ".");       break;
                 case ',': AddToken(TokenType.TOK_COMMA, ",");     break;
+                case '#':
+                    {
+                        while(Peak() != '\n')
+                        {
+                            Advance();
+                        }
+                        break;
+                    }
+                case '=':
+                case '>':
+                case '<':
+                case '~':
+                case ':':
+                    {
+                        if (Match('='))
+                        {
+                            AddToken(OperatorTables.Ops[$"{ch}="], $"{ch}=");
+                        }
+                        break;
+                    }
             }
         }
     }
