@@ -1,12 +1,10 @@
 using System.Text;
-using System.Diagnostics;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 class Lexer
 {
     private int curr = 0;
     private int start = 0;
+    private int dbgCounter = 0;
     private int line = 1;
     private string source = "";
     public List<Token> Tokens = [];
@@ -16,7 +14,7 @@ class Lexer
         this.source = source;
     }
 
-    private bool isAtEnd() => curr >= source.Length;
+    private bool IsAtEnd() => curr >= source.Length;
 
     private char Advance()
     {
@@ -27,14 +25,14 @@ class Lexer
 
     private char Peek()
     {
-        if (isAtEnd())
+        if (IsAtEnd())
             return '\0';
         return source[curr];
     }
 
     private char Lookahead()
     {
-        if (isAtEnd())
+        if (IsAtEnd())
         {
             return '\0';
         }
@@ -59,6 +57,61 @@ class Lexer
     {
         Tokens.Add(new Token(type, lexeme, line));
     }
+
+    private void HadnleNumbers(char c)
+    {
+        var sb = new StringBuilder();
+        sb.Append(c);
+        while (char.IsDigit(Peek()))
+            sb.Append(Advance());
+        if (Peek() == '.' && char.IsDigit(Lookahead()))
+        {
+            sb.Append(Advance());
+            while (char.IsDigit(Peek()))
+                sb.Append(Advance());
+            AddToken(TokenType.TOK_FLOAT, sb.ToString());
+        } else
+        {
+            AddToken(TokenType.TOK_INTEGER, sb.ToString());
+        }
+    }
+
+    private void HandleStrings(char c)
+    {
+        var sb = new StringBuilder();
+        sb.Append(c);
+        while (Peek() != c && !IsAtEnd())
+        {
+            sb.Append(Advance());
+        }
+        sb.Append(Advance());
+        AddToken(TokenType.TOK_STRING, sb.ToString());
+    }
+
+    private void HandleComments(char c)
+    {
+        while (Peek() != '\n')
+            Advance();
+    }
+
+    private void HandleIdentifier(char c)
+    {
+        var sb = new StringBuilder();
+        sb.Append(c);
+        while (char.IsLetterOrDigit(Peek()) || Peek() == '_')
+        {
+            sb.Append(Advance());
+        }
+        string finalTokenLexeme = sb.ToString();
+        if (KeywordsTable.Keywords.ContainsKey(finalTokenLexeme))
+        {
+             AddToken(KeywordsTable.Keywords[finalTokenLexeme], finalTokenLexeme);
+        } else
+        {
+            AddToken(TokenType.TOK_IDENTIFIER, finalTokenLexeme);
+        }
+    }
+
     public void Tokenize()
     {
         while (curr < source.Length)
@@ -72,7 +125,6 @@ class Lexer
                 case '\t':
                 case '\r':                                        break;
                 case '+': AddToken(TokenType.TOK_PLUS, "+");      break;
-                case '-': AddToken(TokenType.TOK_MINUS, "-");     break;
                 case '*': AddToken(TokenType.TOK_STAR, "*");      break;
                 case '/': AddToken(TokenType.TOK_SLASH, "/");     break;
                 case '^': AddToken(TokenType.TOK_CARET, "^");     break;
@@ -87,6 +139,17 @@ class Lexer
                 case '}': AddToken(TokenType.TOK_RCURLY, "}");    break;
                 case '.': AddToken(TokenType.TOK_DOT, ".");       break;
                 case ',': AddToken(TokenType.TOK_COMMA, ",");     break;
+                case '-':
+                    {
+                        if (Lookahead() == '-')
+                        {
+                            HandleComments(ch);
+                        } else
+                        {
+                            AddToken(TokenType.TOK_MINUS, "-");
+                        }
+                        break;
+                    } 
                 case '#':
                     {
                         while(Peek() != '\n')
@@ -109,21 +172,22 @@ class Lexer
                     }
                 case char c when char.IsDigit(c):
                     {
-                        var sb = new StringBuilder();
-                        sb.Append(c);
-                        while (char.IsDigit(Peek()))
-                            sb.Append(Advance());
-                        if (Peek() == '.' && char.IsDigit(Lookahead()))
-                        {
-                            sb.Append(Advance());
-                            while (char.IsDigit(Peek()))
-                                sb.Append(Advance());
-                            AddToken(TokenType.TOK_FLOAT, sb.ToString());
-                        }
-                        else
-                        {
-                            AddToken(TokenType.TOK_INTEGER, sb.ToString());
-                        }
+                        HadnleNumbers(c);
+                        break;
+                    }
+                case '"':
+                    {
+                        HandleStrings(ch);
+                        break;
+                    }
+                case '\'':
+                    {
+                        HandleStrings(ch);
+                        break;
+                    }
+                case char c when char.IsLetter(c) || c == '_':
+                    {
+                        HandleIdentifier(c);
                         break;
                     }
             }

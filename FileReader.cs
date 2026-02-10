@@ -1,6 +1,6 @@
 class FileReader 
 {
-    public string Read(string fileName)
+    public static string Read(string fileName)
     {
         if (!File.Exists(fileName))
         {

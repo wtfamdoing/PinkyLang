@@ -72,3 +72,26 @@ public static class OperatorsTable
         [":="] = TokenType.TOK_ASSIGN
     };
 }
+
+public static class KeywordsTable
+{
+    public static readonly IReadOnlyDictionary<string, TokenType> Keywords = new Dictionary<string, TokenType>
+    {
+        ["if"] = TokenType.TOK_IF,
+        ["then"] = TokenType.TOK_THEN,
+        ["else"] = TokenType.TOK_ELSE,
+        ["true"] = TokenType.TOK_TRUE,
+        ["false"] = TokenType.TOK_FALSE,
+        ["and"] = TokenType.TOK_AND,
+        ["or"] = TokenType.TOK_OR,
+        ["while"] = TokenType.TOK_WHILE,
+        ["do"] = TokenType.TOK_DO,
+        ["for"] = TokenType.TOK_FOR,
+        ["func"] = TokenType.TOK_FUNC,
+        ["null"] = TokenType.TOK_NULL,
+        ["end"] = TokenType.TOK_END,
+        ["print"] = TokenType.TOK_PRINT,
+        ["println"] = TokenType.TOK_PRINTLN,
+        ["ret"] = TokenType.TOK_RET
+    };
+}
