@@ -167,6 +167,10 @@ class Lexer
                         if (Match('='))
                         {
                             AddToken(OperatorsTable.Ops[$"{ch}="], $"{ch}=");
+                        } else
+                        {
+                            string val = ch.ToString();
+                            AddToken(OperatorsTable.Ops[val], val);
                         }
                         break;
                     }

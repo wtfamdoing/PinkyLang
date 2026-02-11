@@ -36,13 +36,14 @@ public enum TokenType
         TOK_COLON,       // :
         TOK_SEMICOLON,   // ;
         TOK_QUESTION,    // ?
+        TOK_EQ,          // =
         TOK_NOT,         // ~
         TOK_GT,          // >
         TOK_LT,          // <
         TOK_GE,          // >=
         TOK_LE,          // <=
         TOK_NE,          // ~=
-        TOK_EQ,          // ==
+        TOK_EQEQ,        // ==
         TOK_ASSIGN,      // :=
         TOK_GTGT,        // >>
         TOK_LTLT,        // <<
@@ -59,7 +60,8 @@ public static class OperatorsTable
 {
     public static readonly IReadOnlyDictionary<string, TokenType> Ops = new Dictionary<string, TokenType>
     {
-        ["=="] = TokenType.TOK_EQ,
+        ["="] = TokenType.TOK_EQ,
+        ["=="] = TokenType.TOK_EQEQ,
         [">"] = TokenType.TOK_GT,
         [">="] = TokenType.TOK_GE,
         [">>"] = TokenType.TOK_GTGT,
