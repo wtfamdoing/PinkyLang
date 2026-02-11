@@ -19,7 +19,7 @@ sealed class NumberLiteral : Expr
         IsFloat = isFloat;
     }
 
-    public override string ToString() => (IsFloat ? "Float" : "Integer") + $"[{Lexeme}]";
+    public override string ToString() => $"{Lexeme}";
 }
 
 sealed class Grouping : Expr
@@ -28,7 +28,7 @@ sealed class Grouping : Expr
 
     public Grouping(Expr expression) => Expression = expression;
 
-    public override string ToString() => $"Group({Expression})";
+    public override string ToString() => $"({Expression})";
 }
 
 sealed class Unary : Expr
@@ -42,7 +42,7 @@ sealed class Unary : Expr
         Operand = operand;
     }
 
-    public override string ToString() => $"Unary operator [{Operator}{Operand}]";
+    public override string ToString() => $"[{Operator}{Operand}]";
 }
 
 sealed class Binary : Expr
@@ -58,5 +58,5 @@ sealed class Binary : Expr
         Right = right;
     }
 
-    public override string ToString() => $"Binary operator, expression is  [{Left} {Operator} {Right}]";
+    public override string ToString() => $"[{Left} {Operator.Lexeme} {Right}]";
 }

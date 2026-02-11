@@ -141,7 +141,7 @@ class Lexer
                 case ',': AddToken(TokenType.TOK_COMMA, ",");     break;
                 case '-':
                     {
-                        if (Lookahead() == '-')
+                        if (Match('-'))
                         {
                             HandleComments(ch);
                         } else
