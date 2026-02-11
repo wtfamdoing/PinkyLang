@@ -15,5 +15,8 @@ class Program
         {
             Console.WriteLine(lexer.Tokens[i]);
         }
+
+        // ast = Parser(lexer.Tokens).Parse();
+        //Colsone WriteLine(ast);
     }
 }
