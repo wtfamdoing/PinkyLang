@@ -1,8 +1,3 @@
-using System.Reflection.Emit;
-using System.Reflection.Metadata.Ecma335;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
-
 class Parser
 {
     private int curr = 0;
@@ -35,8 +30,8 @@ class Parser
 
     private Token Expect(TokenType type)
     {
-        if (IsAtEnd()) throw new Exception($"Found a {PreviousToken().Lexeme} at the end of the string");
-        if (type != Peek().Type) throw new Exception($"Token type doesn't match expected. Expected is '{type}', actual is '{Peek().Type}'");
+        if (IsAtEnd()) throw new ParserException($"Found a {PreviousToken().Lexeme} at the end of the string", PreviousToken().Line);
+        if (type != Peek().Type) throw new ParserException($"Token type doesn't match expected. Expected is '{type}', actual is '{Peek().Type}'", Peek().Line);
         return Advance();
     }
 
@@ -62,10 +57,10 @@ class Parser
         if (Match(TokenType.TOK_LPAREN))
         {
             Expr expr = ParseExpr();
-            if (!Match(TokenType.TOK_RPAREN)) throw new Exception("The ')' is expected");
+            if (!Match(TokenType.TOK_RPAREN)) throw new ParserException("The ')' is expected", Peek().Line);
             else return new Grouping(expr);
         }
-        throw new Exception($"Unexpected token. Current token is {_tokens[curr]}");
+        throw new ParserException($"Unexpected token. Current token is {Peek()}", Peek().Line);
     }
 
     public Expr ParseUnary()
