@@ -194,6 +194,10 @@ class Lexer
                         HandleIdentifier(c);
                         break;
                     }
+                default:
+                    {
+                        throw new LexerException("Unexpected character.", line);
+                    }
             }
         }
     }

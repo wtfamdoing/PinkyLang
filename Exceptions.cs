@@ -15,9 +15,11 @@ class ParserException : Exception
 
 class LexerException: Exception
 {
-    public LexerException(string message) : base(message)
-    {
+    public int Line { get; }
 
+    public LexerException(string message, int line) : base(message)
+    {
+        Line = line;
     }
 
     public override string ToString()
